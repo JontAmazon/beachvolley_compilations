@@ -1,6 +1,6 @@
-Custom script to help me create this output:
-1. The whole video, but trim away dead time between points.
-2. Receive/attack compilations for each player.
+Custom script that takes a beachvolley video as input, and gives different videos as output:
+1. The whole video, but dead time between points trimmed away.
+2. Compilations for each player (receive/attack).
 
 Method:
 1. Start script and immediately start the video (and don't pause it).
