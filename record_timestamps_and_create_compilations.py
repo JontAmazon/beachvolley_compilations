@@ -11,7 +11,7 @@ os.chdir(ffmpeg_bin_path)
 def delete_folder(folder_path):
     if os.path.exists(folder_path):
         shutil.rmtree(folder_path)
-        print(f"Folder '{folder_path}' and all its contents have been deleted.")
+        print(f"\n\nFolder '{folder_path}' and all its contents have been deleted.\n")
     else:
         print(f"Folder '{folder_path}' does not exist.")
 
@@ -32,7 +32,7 @@ def generate_time_ranges(timestamps):
     time_ranges = []
     for timestamp in timestamps:
         start_seconds = timestamp_to_seconds(timestamp) - 8
-        end_seconds = timestamp_to_seconds(timestamp) + 4
+        end_seconds = timestamp_to_seconds(timestamp) + 2
         if start_seconds < 0:
             start_seconds = 0  # Ensure start time does not go negative
         start_time = seconds_to_timestamp(start_seconds)
@@ -43,8 +43,8 @@ def generate_time_ranges(timestamps):
 def generate_highlight_time_ranges(timestamps):
     time_ranges = []
     for timestamp in timestamps:
-        start_seconds = timestamp_to_seconds(timestamp) - 20  # should be enough
-        end_seconds = timestamp_to_seconds(timestamp) + 2
+        start_seconds = timestamp_to_seconds(timestamp) - 25  # maybe 20 is enough
+        end_seconds = timestamp_to_seconds(timestamp) + 0
         if start_seconds < 0:
             start_seconds = 0  # Ensure start time does not go negative
         start_time = seconds_to_timestamp(start_seconds)
@@ -68,29 +68,31 @@ def record_timestamps():
         while True:
             if keyboard.is_pressed('1'):
                 player1_timestamps.append(time.time() - starting_time)
-                print(f"Player 1 timestamp recorded: {time.time() - starting_time}")
+                print(f"Player 1: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
             elif keyboard.is_pressed('2'):
                 player2_timestamps.append(time.time() - starting_time)
-                print(f"Player 2 timestamp recorded: {time.time() - starting_time}")
+                print(f"Player 2: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
             elif keyboard.is_pressed('3'):
                 player3_timestamps.append(time.time() - starting_time)
-                print(f"Player 3 timestamp recorded: {time.time() - starting_time}")
+                print(f"Player 3: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
             elif keyboard.is_pressed('4'):
                 player4_timestamps.append(time.time() - starting_time)
-                print(f"Player 4 timestamp recorded: {time.time() - starting_time}")
+                print(f"Player 4: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
             elif keyboard.is_pressed('h'): # highlight
                 highlights_timestamps.append(time.time() - starting_time)
-                print(f"Highlight timestamp: {time.time() - starting_time}")
+                print(f"Highlight: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
             elif keyboard.is_pressed('j'): # ball is about to start
-                start_timestamps.append(time.time() - starting_time)
+                start_timestamps.append(time.time() - starting_time - 2 - 2 - 4) # 2s before the serve, 2s to start of video after starting script, 4s more required in my experience
+                print(f"\nPoint starts: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
             elif keyboard.is_pressed('k'): # ball ends
-                stop_timestamps.append(time.time() - starting_time)
+                stop_timestamps.append(time.time() - starting_time - 2) # count with 2 seconds to start of video after starting script
+                print(f"Point ended: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
             elif keyboard.is_pressed('0'):
                 print("Exiting...")
@@ -131,7 +133,16 @@ def extract_segments(input_file, segments, output_dir):
             "-c", "copy",
             output_file
         ]
-        subprocess.run(command)
+        print(f"extract_segment: {command=}")
+        subprocess.run(command)  # ffmpeg -i {input_file} -ss {start} -to {end} -c copy
+
+        # player 1:
+        # command=['ffmpeg', '-i', 'C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations/beachvolley.mp4', '-ss', '00:00:00', '-to', '00:00:10', '-c', 'copy', 'C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations/segments\\segment1.mp4']     
+        # ffmpeg version N-115973-g127545350f-20240622 Copyright (c) 2000-2024 the FFmpeg developers
+
+        # all video, trimmed:
+        # command=['ffmpeg', '-i', 'C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations/beachvolley.mp4', '-ss', 9.683095932006836, '-to', 12.881790399551392, '-c', 'copy', 'C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations/segments\\segment1.mp4']
+
         segment_files.append(output_file)
         print(f"Extracted segment {i+1}: {start} to {end}")
         print("\n\n\n")
@@ -160,7 +171,8 @@ def create_compilation(segment_files, output_file):
 
 if __name__ == "__main__":
     dirr = "C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations"
-    input_file = dirr + "/beachvolley.mp4"
+    # input_file = dirr + "/beachvolley.mp4"
+    input_file = dirr + "/input/beach_20240714/20240714_game1.mp4"
 
     # 1. Semi automate generating timestamps
     p1, p2, p3, p4, highlights, starts, stops = record_timestamps()
@@ -187,22 +199,28 @@ if __name__ == "__main__":
     for stop in stops:
         print(f"{stop}")
 
-    # 2a. Use ffmpeg to create segments and merge them together, for each player
     segment_dir = dirr + "/segments"
     output_dir = dirr + "/output"
     delete_folder(output_dir)
     os.makedirs(output_dir)
+
+    # 2a. Use ffmpeg to create segments and merge them together, for each player
     for i in range(4):
-        print(f"\n\n Player {i+1}")
+        print("\n\n")
+        for j in range(3):
+            print(f"\tPlayer {i+1}")
         delete_folder(segment_dir)
         output = output_dir + f"/compilation_player{i+1}.mp4"
 
         segments = time_ranges_per_player[i]
         segment_files = extract_segments(input_file, segments, segment_dir)
-        print(f"\n create compilation for Player {i+1} \n")
+        print(f"\n creat compilation for Player {i+1} \n")
         create_compilation(segment_files, output)
 
     # 2b. Same thing but for start and stop.
+    print("\n\n")
+    for i in range(3):
+        print(f"\tVideo with ALL points, but dead time trimmed away")
     print("Expecting len(starts) == len(stops)")
     print(f"len(starts): {len(starts)}")
     print(f"len(stops): {len(stops)}")
@@ -216,11 +234,21 @@ if __name__ == "__main__":
         for stop in stops:
             print(f"{stop}")
     else:
-        print(f"\n\n All points, but dead time trimmed away")
         delete_folder(segment_dir)
         output = output_dir + f"/beachvolley_trimmed.mp4"
+        
+        # test fix script:
+        new_starts, new_stops = [], []
+        for start in starts:
+            new_starts.append(seconds_to_timestamp(start))
+        starts = new_starts
+        for stop in stops:
+            new_stops.append(seconds_to_timestamp(stop))
+        stops = new_stops
 
         segments = list(zip(starts, stops))
+        print(f"{segments=}")
+        print(f"{segment_dir=}")
         segment_files = extract_segments(input_file, segments, segment_dir)
-        print(f"\n create beachvolley_trimmed.mp4 \n")
+        print(f"\n creating beachvolley_trimmed.mp4 \n")
         create_compilation(segment_files, output)
