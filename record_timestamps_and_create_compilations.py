@@ -43,7 +43,7 @@ def generate_time_ranges(timestamps):
 def generate_highlight_time_ranges(timestamps, highlight_length):
     time_ranges = []
     for timestamp in timestamps:
-        start_seconds = timestamp_to_seconds(timestamp) - highlight_length  # 10, 20, 30
+        start_seconds = timestamp_to_seconds(timestamp) - highlight_length  # 10, 16, 22
         end_seconds = timestamp_to_seconds(timestamp) + 0
         if start_seconds < 0:
             start_seconds = 0  # Ensure start time does not go negative
@@ -58,13 +58,13 @@ def record_timestamps():
     player3_timestamps = []
     player4_timestamps = []
     highlights_timestamps1 = [] # 10 sec long highlights
-    highlights_timestamps2 = [] # 20 sec long highlights
-    highlights_timestamps3 = [] # 30 sec long highlights
+    highlights_timestamps2 = [] # 16 sec long highlights
+    highlights_timestamps3 = [] # 22 sec long highlights
     start_timestamps = [] # point is about to start
     stop_timestamps = []  # point ended
     print("Press 'j' for point is about to start, 'k' for point stopped.")
     print("Press '1' for Player 1, '2' for Player 2, etc.")
-    print("Press 'h' for 10 sec highlight, 'g' for 20 sec, 'f' for 30 sec.")
+    print("Press 'h' for 10 sec highlight, 'g' for 16 sec, 'f' for 22 sec.")
     print("Press '0' to quit.")
 
     starting_time = time.time()
@@ -90,11 +90,11 @@ def record_timestamps():
                 highlights_timestamps1.append(time.time() - starting_time)
                 print(f"Highlight: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
-            elif keyboard.is_pressed('g'): # 20 sec highlight
+            elif keyboard.is_pressed('g'): # 16 sec highlight
                 highlights_timestamps2.append(time.time() - starting_time)
                 print(f"Highlight: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
-            elif keyboard.is_pressed('f'): # 30 sec highlight
+            elif keyboard.is_pressed('f'): # 22 sec highlight
                 highlights_timestamps3.append(time.time() - starting_time)
                 print(f"Highlight: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
@@ -124,8 +124,8 @@ def record_timestamps():
     # merge all highlights. (wops, ugly code).
     all_highlights = []
     h1 = generate_highlight_time_ranges(highlights_timestamps1, 10),
-    h2 = generate_highlight_time_ranges(highlights_timestamps2, 20),
-    h3 = generate_highlight_time_ranges(highlights_timestamps3, 30),
+    h2 = generate_highlight_time_ranges(highlights_timestamps2, 16),
+    h3 = generate_highlight_time_ranges(highlights_timestamps3, 22),
     if len(h1) > 0:
         h1 = h1[0] # list of tuples (start, end)
     if len(h2) > 0:
@@ -194,7 +194,11 @@ def create_compilation(segment_files, output_file):
 if __name__ == "__main__":
     dirr = "C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations"
     # input_file = dirr + "/beachvolley.mp4"
-    input_file = dirr + "/input/beach_20240714/20240714_game1.mp4"
+    # input_file = dirr + "/input/beach_20240714/20240714_game1.mp4"
+    input_file = dirr + "/input/beach_20240714/20240714_game2.mp4"
+    # input_file = dirr + "/input/beach_20240714/20240714_game3.mp4"
+    # input_file = dirr + "/input/beach_20240714/20240714_game4.mp4"
+    # input_file = dirr + "/input/beach_20240714/20240714_gameX_od-hr.mp4"
 
     # 1. Semi automate generating timestamps
     p1, p2, p3, p4, highlights, starts, stops = record_timestamps()
@@ -231,7 +235,7 @@ if __name__ == "__main__":
     delete_folder(output_dir)
     os.makedirs(output_dir)
 
-    """
+    
     # 2a. Use ffmpeg to create segments and merge them together, for each player
     for i in range(5):
         print("\n\n")
@@ -283,4 +287,4 @@ if __name__ == "__main__":
         segment_files = extract_segments(input_file, segments, segment_dir)
         print(f"\n creating beachvolley_trimmed.mp4 \n")
         create_compilation(segment_files, output)
-    """
+    
