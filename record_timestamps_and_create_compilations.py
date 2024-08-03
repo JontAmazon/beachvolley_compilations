@@ -318,3 +318,25 @@ if __name__ == "__main__":
         print(f"\n creating beachvolley_trimmed.mp4 \n")
         create_compilation(segment_files, output)
     
+
+    print("\n\n Player 1 time ranges:")
+    for start, end in p1:
+        print(f"({start}, {end})")
+    print("\n Player 2 time ranges:")
+    for start, end in p2:
+        print(f"({start}, {end})")
+    print("\n Player 3 time ranges:")
+    for start, end in p3:
+        print(f"({start}, {end})")
+    print("\n Player 4 time ranges:")
+    for start, end in p4:
+        print(f"({start}, {end})")
+    print("\n Highlights time ranges:")
+    for start, end in highlights:
+        print(f"({start}, {end})")
+    print("\n Points start:")
+    for start in starts:
+        print(f"{start}")
+    print("\n Points stop:")
+    for stop in stops:
+        print(f"{stop}")
