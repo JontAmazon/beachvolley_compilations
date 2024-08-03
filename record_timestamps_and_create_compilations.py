@@ -53,18 +53,23 @@ def generate_highlight_time_ranges(timestamps, highlight_length):
     return time_ranges
 
 def record_timestamps():
-    player1_timestamps = []
+    player1_timestamps = [] # player 1 receives serve
     player2_timestamps = []
     player3_timestamps = []
     player4_timestamps = []
-    highlights_timestamps1 = [] # 10 sec long highlights
-    highlights_timestamps2 = [] # 16 sec long highlights
-    highlights_timestamps3 = [] # 22 sec long highlights
+    highlights_timestamps1 = [] # 10 sec long highlights end
+    highlights_timestamps2 = [] # 16 sec long highlights end
+    highlights_timestamps3 = [] # 22 sec long highlights end
+    highlights_timestamps4 = [] # 30 sec long highlights end
     start_timestamps = [] # point is about to start
     stop_timestamps = []  # point ended
+
+    for _ in range(10):
+        print("DID YOU REMEMBER TO CHANGE TO THE CORRECT INPUT VIDEO?")
+
     print("Press 'j' for point is about to start, 'k' for point stopped.")
     print("Press '1' for Player 1, '2' for Player 2, etc.")
-    print("Press 'h' for 10 sec highlight, 'g' for 16 sec, 'f' for 22 sec.")
+    print("Press 'h' for 10 sec highlight, 'g' for 16 sec, 'f' for 22 sec, 'd' for 30 sec")
     print("Press '0' to quit.")
 
     starting_time = time.time()
@@ -98,6 +103,10 @@ def record_timestamps():
                 highlights_timestamps3.append(time.time() - starting_time)
                 print(f"Highlight: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
+            elif keyboard.is_pressed('d'): # 30 sec highlight
+                highlights_timestamps4.append(time.time() - starting_time)
+                print(f"Highlight: {time.time() - starting_time}")
+                time.sleep(0.2)  # debounce time
             elif keyboard.is_pressed('j'): # ball is about to start
                 start_timestamps.append(time.time() - starting_time - 2 - 2 - 4) # 2s before the serve, 2s to start of video after starting script, 4s more required in my experience
                 print(f"\nPoint starts: {time.time() - starting_time}")
@@ -120,24 +129,30 @@ def record_timestamps():
     highlights_timestamps1 = [format_time(ts) for ts in highlights_timestamps1]
     highlights_timestamps2 = [format_time(ts) for ts in highlights_timestamps2]
     highlights_timestamps3 = [format_time(ts) for ts in highlights_timestamps3]
+    highlights_timestamps4 = [format_time(ts) for ts in highlights_timestamps4]
 
     # merge all highlights. (wops, ugly code).
     all_highlights = []
     h1 = generate_highlight_time_ranges(highlights_timestamps1, 10),
     h2 = generate_highlight_time_ranges(highlights_timestamps2, 16),
     h3 = generate_highlight_time_ranges(highlights_timestamps3, 22),
+    h4 = generate_highlight_time_ranges(highlights_timestamps4, 30),
     if len(h1) > 0:
         h1 = h1[0] # list of tuples (start, end)
     if len(h2) > 0:
         h2 = h2[0] # list of tuples (start, end)
     if len(h3) > 0:
         h3 = h3[0] # list of tuples (start, end)
+    if len(h4) > 0:
+        h4 = h4[0] # list of tuples (start, end)
     if len(h1) > 0:
         all_highlights = all_highlights + h1
     if len(h2) > 0:
         all_highlights = all_highlights + h2
     if len(h3) > 0:
         all_highlights = all_highlights + h3
+    if len(h4) > 0:
+        all_highlights = all_highlights + h4
 
     return (
         generate_time_ranges(player1_timestamps), # list of tuples (start, end)
@@ -195,8 +210,8 @@ if __name__ == "__main__":
     dirr = "C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations"
     # input_file = dirr + "/beachvolley.mp4"
     # input_file = dirr + "/input/beach_20240714/20240714_game1.mp4"
-    input_file = dirr + "/input/beach_20240714/20240714_game2.mp4"
-    # input_file = dirr + "/input/beach_20240714/20240714_game3.mp4"
+    # input_file = dirr + "/input/beach_20240714/20240714_game2.mp4"
+    input_file = dirr + "/input/beach_20240714/20240714_game3.mp4"
     # input_file = dirr + "/input/beach_20240714/20240714_game4.mp4"
     # input_file = dirr + "/input/beach_20240714/20240714_gameX_od-hr.mp4"
 
