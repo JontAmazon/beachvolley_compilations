@@ -8,6 +8,9 @@ ffmpeg_bin_path = r"C:\Program Files\ffmpeg-master-latest-win64-gpl\ffmpeg-maste
 os.chdir(ffmpeg_bin_path)
 # os.system("ffmpeg -version")
 
+def print_red(text):
+    print(f"\033[91m{text}\033[0m")
+
 def delete_folder(folder_path):
     if os.path.exists(folder_path):
         shutil.rmtree(folder_path)
@@ -64,6 +67,17 @@ def record_timestamps():
     start_timestamps = [] # point is about to start
     stop_timestamps = []  # point ended
 
+    def verify_starts_and_stops():
+        """Make sure I don't forget start or stop."""
+        if len(start_timestamps) > len(stop_timestamps) + 1:
+            for _ in range(10):
+                print_red("Too many start times. Removing last one.")
+            del start_timestamps[-1]
+        if len(start_timestamps) < len(stop_timestamps):
+            for _ in range(10):
+                print_red("Too many stop times. Removing last one.")
+            del stop_timestamps[-1]
+
     for _ in range(10):
         print("DID YOU REMEMBER TO CHANGE TO THE CORRECT INPUT VIDEO?")
 
@@ -111,10 +125,12 @@ def record_timestamps():
                 start_timestamps.append(time.time() - starting_time - 2 - 2 - 4) # 2s before the serve, 2s to start of video after starting script, 4s more required in my experience
                 print(f"\nPoint starts: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
+                verify_starts_and_stops()
             elif keyboard.is_pressed('k'): # ball ends
                 stop_timestamps.append(time.time() - starting_time - 2) # count with 2 seconds to start of video after starting script
                 print(f"Point ended: {time.time() - starting_time}")
                 time.sleep(0.2)  # debounce time
+                verify_starts_and_stops()
             elif keyboard.is_pressed('0'):
                 print("Exiting...")
                 break
@@ -208,10 +224,9 @@ def create_compilation(segment_files, output_file):
 
 if __name__ == "__main__":
     dirr = "C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations"
-    # input_file = dirr + "/beachvolley.mp4"
-    # input_file = dirr + "/input/beach_20240714/20240714_game1.mp4"
+    input_file = dirr + "/input/beach_20240714/20240714_game1.mp4"
     # input_file = dirr + "/input/beach_20240714/20240714_game2.mp4"
-    input_file = dirr + "/input/beach_20240714/20240714_game3.mp4"
+    # input_file = dirr + "/input/beach_20240714/20240714_game3.mp4"
     # input_file = dirr + "/input/beach_20240714/20240714_game4.mp4"
     # input_file = dirr + "/input/beach_20240714/20240714_gameX_od-hr.mp4"
 
