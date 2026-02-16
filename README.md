@@ -6,9 +6,11 @@ Custom script that takes a beachvolley video as input, and gives different video
 3. ((Compilations for each player (receive/attack))).
 
 ## How to use:
-1. Start script and immediately start the video, and never pause it. (The script relies on a ~1-2 sec difference between starting the script and then the video).
+1. Start script and immediately start the video, and never pause it. (The script relies on a circa ~1-4 sec difference between starting the script and then the video).
 
-2. Watch the video and press keys when certain events happen:
+2. Wait at least 5 seconds? Some bug?
+
+3. Watch the video and press keys when certain events happen:
 
 For trimming:
 - **j** - points is about to start
@@ -20,7 +22,9 @@ For highlights:
 - **f** - 22 sec highlight (rare, long rallies)
 - **d** - 30 sec highlight (rare, long rallies)
 
-### Secondary, optional hotkeys:
+Note to self - would be better (in almost all cases) to just have 1 highlight hotkey, then reuse values for start/end.
+
+### Secondary features:
 
 For player mistakes focus:
 - **1** - player 1 mistake

@@ -5,8 +5,9 @@ import keyboard
 import time
 
 ffmpeg_bin_path = r"C:\Program Files\ffmpeg-master-latest-win64-gpl\ffmpeg-master-latest-win64-gpl\bin"
-os.chdir(ffmpeg_bin_path)
-# os.system("ffmpeg -version")
+ffmpeg_exe = os.path.join(ffmpeg_bin_path, "ffmpeg.exe")
+if not os.path.isfile(ffmpeg_exe):
+    ffmpeg_exe = "ffmpeg"
 
 def print_red(text):
     print(f"\033[91m{text}\033[0m")
@@ -218,7 +219,7 @@ def extract_segments(input_file, segments, output_dir):
         print(f"extracting segment {i+1}")
         output_file = os.path.join(output_dir, f"segment{i+1}.mp4")
         command = [
-            "ffmpeg",
+            ffmpeg_exe,
             "-i", input_file,
             "-ss", start,
             "-to", end,
@@ -226,7 +227,7 @@ def extract_segments(input_file, segments, output_dir):
             output_file
         ]
         print(f"extract_segment: {command=}")
-        subprocess.run(command)  # ffmpeg -i {input_file} -ss {start} -to {end} -c copy
+        subprocess.run(command, check=True)  # ffmpeg -i {input_file} -ss {start} -to {end} -c copy
         segment_files.append(output_file)
         print(f"Extracted segment {i+1}: {start} to {end}")
         print("\n\n\n")
@@ -234,21 +235,29 @@ def extract_segments(input_file, segments, output_dir):
     return segment_files
 
 def create_compilation(segment_files, output_file):
-    with open("file_list.txt", "w") as file_list:
+    if not segment_files:
+        print_red(f"Skipping compilation, no segments found for: {output_file}")
+        return False
+
+    file_list_path = os.path.join(os.path.dirname(output_file), "file_list.txt")
+    with open(file_list_path, "w", encoding="utf-8") as file_list:
         for segment_file in segment_files:
-            file_list.write(f"file '{segment_file}'\n")
+            # ffmpeg concat demuxer expects paths in a plain text list.
+            normalized = segment_file.replace("\\", "/").replace("'", "'\\''")
+            file_list.write(f"file '{normalized}'\n")
     
     command = [
-        "ffmpeg",
+        ffmpeg_exe,
         "-f", "concat",
         "-safe", "0",
-        "-i", "file_list.txt",
+        "-i", file_list_path,
         "-c", "copy",
         output_file
     ]
-    subprocess.run(command)
+    subprocess.run(command, check=True)
     print(f"Compilation video created: {output_file}")
-    os.remove("file_list.txt")
+    os.remove(file_list_path)
+    return True
 
 
 
@@ -256,18 +265,8 @@ def create_compilation(segment_files, output_file):
 
 
 if __name__ == "__main__":
-    dirr = "C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations"
-
-    # 2024.10.30 Finn, Ate, David and Oskar:
-    # input_file = dirr + "/input/2024.10.30/set1.mp4" # done, but bad timing.
-    # input_file = dirr + "/input/2024.10.30/set2.mp4"
-    # input_file = dirr + "/input/2024.10.30/set3.mp4"
-
-    # 2024.11.17 challenger with David:
-    # input_file = dirr + "/input/2024.11.17/set1.mp4"
-    # input_file = dirr + "/input/2024.11.17/set2_3.mp4"
+    dirr = os.path.dirname(os.path.abspath(__file__))
     input_file = dirr + "/input/indoor/2026.02.14-div3-vs-vindrarp-set4.mp4"
-
 
     # 1. Semi automate generating timestamps
     p1, p2, p3, p4, m1, m2, m3, m4, highlights, starts, stops = record_timestamps()

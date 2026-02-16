@@ -148,7 +148,7 @@ def seconds_to_timestamp(seconds):
 
 
 
-dirr = "C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations"
+dirr = "C:/Users/jonat/Desktop/Code/_old/trim_mp4/beach_compilations"
 input_file = dirr + "/input/beach_20240714/20240714_game3.mp4"
 segment_dir = dirr + "/segments"
 output_dir = dirr + "/output"

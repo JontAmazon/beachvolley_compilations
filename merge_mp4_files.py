@@ -29,62 +29,21 @@ def create_compilation(segment_files, output_file):
     print(f"Compilation video created: {output_file}")
     os.remove("file_list.txt")
 
-dirr = "C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations"
+dirr = "C:/Users/jonat/Desktop/Code/_old/trim_mp4/beach_compilations"
 output_dir = dirr + "/output"
 delete_folder(output_dir)
 os.makedirs(output_dir)
 output = dirr + "/output/concat_video.mp4"
 
-
-
-
 #input_files = [
-#    dirr + "/saved_output/20240803/all_highlights/highlights2.mp4",
-#    dirr + "/saved_output/20240803/all_highlights/highlights3.mp4",
-#    dirr + "/saved_output/20240803/all_highlights/highlights4.mp4",
-#    dirr + "/saved_output/20240803/all_highlights/highlights5.mp4",
-#    dirr + "/saved_output/20240803/all_highlights/highlights6.mp4",
-#]
-
-#input_files = [
-    #dirr + "/saved_output/20240803/trimmed_set2.mp4", # 9:50
-    #dirr + "/saved_output/20240803/trimmed_set3.mp4", # 9:00
-    #dirr + "/saved_output/20240803/trimmed_set4.mp4", # 8:50
-    #dirr + "/saved_output/20240803/trimmed_set5.mp4", # 10:50
-    #dirr + "/saved_output/20240803/trimmed_set6.mp4", # 11:30
-#]
-
-#input_files = [
-#    dirr + "/saved_output/20240803/mistakes_jonatan/mistakes_jonatan3.mp4",
-#    dirr + "/saved_output/20240803/mistakes_jonatan/mistakes_jonatan4.mp4",
-#    dirr + "/saved_output/20240803/mistakes_jonatan/mistakes_jonatan5.mp4",
-#    dirr + "/saved_output/20240803/mistakes_jonatan/mistakes_jonatan6.mp4",
-#]
-
-#input_files = [
-#    dirr + "/saved_output/20240803/mistakes_oskar/mistakes_oskar3.mp4",
-#    dirr + "/saved_output/20240803/mistakes_oskar/mistakes_oskar4.mp4",
-#    dirr + "/saved_output/20240803/mistakes_oskar/mistakes_oskar5.mp4",
-#    dirr + "/saved_output/20240803/mistakes_oskar/mistakes_oskar6.mp4",
-#]
-
-#input_files = [
-#    dirr + "/saved_output/20240803/mistakes_hakan/mistakes_hakan3.mp4",
-#    dirr + "/saved_output/20240803/mistakes_hakan/mistakes_hakan4.mp4",
-#    dirr + "/saved_output/20240803/mistakes_hakan/mistakes_hakan5.mp4",
-#    dirr + "/saved_output/20240803/mistakes_hakan/mistakes_hakan6.mp4",
+#    dirr + "/saved_output/2024.11.17/parts/set1_highlights.mp4",
+#    dirr + "/saved_output/2024.11.17/parts/set2_3_highlights.mp4",
 #]
 
 input_files = [
-    dirr + "/saved_output/20240803/mistakes_simon/mistakes_simon3.mp4",
-    dirr + "/saved_output/20240803/mistakes_simon/mistakes_simon4.mp4",
-    dirr + "/saved_output/20240803/mistakes_simon/mistakes_simon5.mp4",
-    dirr + "/saved_output/20240803/mistakes_simon/mistakes_simon6.mp4",
+    dirr + "/saved_output/2024.11.17/parts/set1_jonatan_mistakes.mp4",
+    dirr + "/saved_output/2024.11.17/parts/set2_3_jonatan_mistakes.mp4",
 ]
-
-
-
-
 
 
 create_compilation(input_files, output)
