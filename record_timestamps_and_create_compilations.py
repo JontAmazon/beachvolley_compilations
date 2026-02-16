@@ -82,9 +82,7 @@ def record_timestamps():
                 print_red("Too many stop times. Removing last one.")
             del stop_timestamps[-1]
 
-    for _ in range(3):
-        print_red("Reminder: did you change to the correct input video?")
-
+    print_red("Friendly reminder: changed to correct input video in the code?")
     print("Press 'j' for point starts, 'k' for point stopped.")
     print("Press '5' for Player 1 serve reception, '6' for Player 2, etc.")
     print("Press '1' for Player 1 mistake , '2' for Player 2, etc.")
@@ -257,23 +255,19 @@ def create_compilation(segment_files, output_file):
 
 
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     dirr = "C:/Users/jonat/Desktop/Code/trim_mp4/beach_compilations"
-    # input_file = dirr + "/input/20240803/20240803_set2.mp4"
-    input_file = dirr + "/input/20240803/20240803_set3.mp4"
-    # input_file = dirr + "/input/20240803/20240803_set4.mp4"
-    # input_file = dirr + "/input/20240803/20240803_set5.mp4"
-    # input_file = dirr + "/input/20240803/20240803_set6.mp4"
+
+    # 2024.10.30 Finn, Ate, David and Oskar:
+    # input_file = dirr + "/input/2024.10.30/set1.mp4" # done, but bad timing.
+    # input_file = dirr + "/input/2024.10.30/set2.mp4"
+    # input_file = dirr + "/input/2024.10.30/set3.mp4"
+
+    # 2024.11.17 challenger with David:
+    # input_file = dirr + "/input/2024.11.17/set1.mp4"
+    # input_file = dirr + "/input/2024.11.17/set2_3.mp4"
+    input_file = dirr + "/input/indoor/2026.02.14-div3-vs-vindrarp-set4.mp4"
+
 
     # 1. Semi automate generating timestamps
     p1, p2, p3, p4, m1, m2, m3, m4, highlights, starts, stops = record_timestamps()
@@ -386,6 +380,12 @@ if __name__ == "__main__":
         print(f"{segments=}")
         print(f"{segment_dir=}")
         segment_files = extract_segments(input_file, segments, segment_dir)
+
+        for _ in range(5):
+            print_red("this is how segment_files looks:")
+        print(segment_files)
+        print(type(segment_files))
+
         print_red(f"\n creating beachvolley_trimmed.mp4 \n")
         create_compilation(segment_files, output)
     
